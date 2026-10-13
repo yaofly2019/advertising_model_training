@@ -19,7 +19,7 @@ steps:
     args:
       - '-c'
       - |
-        python -m pytest test_training.py -v
+        python -m pytest test_python.py -v
 
   # Step 4: Clone the model training repository
   # - name: 'gcr.io/cloud-builders/git'
