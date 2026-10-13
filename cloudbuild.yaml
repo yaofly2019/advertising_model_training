@@ -4,17 +4,17 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'us-central1-docker.pkg.dev/mlops-510717/mlops-repo/bank-campaign-model:latest'
+      - 'us-central1-docker.pkg.dev/mlops-510717/mlops-repo/advertising-model:latest'
       - '.'
 
   # Step 2: Push image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'us-central1-docker.pkg.dev/mlops-510717/mlops-repo/bank-campaign-model:latest'
+      - 'us-central1-docker.pkg.dev/mlops-510717/mlops-repo/advertising-model:latest'
 
   # Step 3: Run unit tests inside the container
-  - name: 'us-central1-docker.pkg.dev/mlops-510717/mlops-repo/bank-campaign-model:latest'
+  - name: 'us-central1-docker.pkg.dev/mlops-510717/mlops-repo/advertising-model:latest'
     entrypoint: 'bash'
     args:
       - '-c'
@@ -22,20 +22,20 @@ steps:
         python -m pytest test_training.py -v
 
   # Step 4: Clone the model training repository
-  - name: 'gcr.io/cloud-builders/git'
-    args:
-      - 'clone'
-      - 'https://github.com/yaofly2019/model-training-repo.git'
+  # - name: 'gcr.io/cloud-builders/git'
+  #   args:
+  #     - 'clone'
+  #     - 'https://github.com/yaofly2019/model-training-repo.git'
 
   # Step 5: Copy updated training script to Composer DAGs bucket
   - name: 'gcr.io/cloud-builders/gsutil'
     args:
       - 'cp'
-      - 'model-training-repo/bank_campaign_model_training.py'
+      - 'advertising_model_training.py'
       - 'gs://us-central1-mlops-airflow2-a7316156-bucket/dags'
 
 images:
-  - 'us-central1-docker.pkg.dev/mlops-510717/mlops-repo/bank-campaign-model:latest'
+  - 'us-central1-docker.pkg.dev/mlops-510717/mlops-repo/advertising-model:latest'
 
 options:
   logging: CLOUD_LOGGING_ONLY
